@@ -2,7 +2,7 @@
 
 name = "assignment1-basic-app"
 client_id = "fbcb120784c941cbc1f4ccc035cbce65"
-application_url = "https://springer-project-christina-wondering.trycloudflare.com"
+application_url = "https://cpu-failed-finals-republicans.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -11,10 +11,10 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://springer-project-christina-wondering.trycloudflare.com/auth/callback",
-  "https://springer-project-christina-wondering.trycloudflare.com/auth/shopify/callback",
-  "https://springer-project-christina-wondering.trycloudflare.com/api/auth/callback",
-  "https://springer-project-christina-wondering.trycloudflare.com/.shopify/graphiql/auth/callback"
+  "https://cpu-failed-finals-republicans.trycloudflare.com/auth/callback",
+  "https://cpu-failed-finals-republicans.trycloudflare.com/auth/shopify/callback",
+  "https://cpu-failed-finals-republicans.trycloudflare.com/api/auth/callback",
+  "https://cpu-failed-finals-republicans.trycloudflare.com/.shopify/graphiql/auth/callback"
 ]
 
 [webhooks]
