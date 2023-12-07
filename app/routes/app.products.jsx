@@ -28,13 +28,14 @@ export const loader = async ({ request }) => {
     query {
       collection(id: "${collectionId}") {
         handle
-    products(first: 50) {
-      nodes {
-        title,
-        id,
-        status
-      }
-    }
+        products(first: 50) {
+        nodes {
+            title,
+            id,
+            descriptionHtml,
+            status
+        }
+        }
       }
     }
   `);
@@ -46,7 +47,7 @@ export const loader = async ({ request }) => {
 
 export default function Products() {
   const { data } = useLoaderData();
-  console.log(data);
+
   return (
     <Page>
       <ui-title-bar title="All Collections">
@@ -61,6 +62,14 @@ export default function Products() {
                   <th>Name</th>
                   <th>Description</th>
                 </tr>
+                {data.collection.products.nodes.map((product) => {
+                  return (
+                    <tr key={product.id}>
+                      <td>{product.title}</td>
+                      <td>{product.descriptionHtml}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </Card>
