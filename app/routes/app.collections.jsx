@@ -1,22 +1,7 @@
-import {
-  Box,
-  Card,
-  Layout,
-  Link,
-  List,
-  Page,
-  Text,
-  BlockStack,
-  LegacyCard,
-  DataTable,
-  Button,
-  Modal,
-  FormLayout,
-  TextField,
-} from "@shopify/polaris";
+import { Card, Layout, Page, Button } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 
-import { Form, useLoaderData, useSubmit } from "@remix-run/react";
+import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
 
 export const loader = async ({ request }) => {
   const { admin } = await authenticate.admin(request);
@@ -123,6 +108,7 @@ export default function Collections() {
                   <th>Description</th>
                   <th>Edit</th>
                   <th>Delete</th>
+                  <th>View Products</th>
                 </tr>
                 {data.collections.edges.map((cl) => (
                   <tr key={cl.node.id}>
@@ -147,6 +133,13 @@ export default function Collections() {
                         }}
                       >
                         Delete
+                      </Button>
+                    </td>
+                    <td>
+                      <Button variant="tertiary">
+                        <Link to={`/app/products?collectionId=${cl.node.id}`}>
+                          View Products
+                        </Link>
                       </Button>
                     </td>
                   </tr>
