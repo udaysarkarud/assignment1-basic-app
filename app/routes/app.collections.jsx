@@ -2,6 +2,8 @@ import { Card, Layout, Page, Button } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 
 import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
+import PopupModel from "../components/PopupModel";
+import { useState } from "react";
 
 export const loader = async ({ request }) => {
   const { admin } = await authenticate.admin(request);
@@ -85,6 +87,20 @@ export async function action({ request }) {
     );
   }
 
+  if (request.method === "PATCH") {
+    response = await admin.graphql(
+      `#graphql
+      mutation collectionUpdate {
+        collectionUpdate(input: {id: "${values.id}", title: "${values.title}", descriptionHtml: "${values.description}"}) {
+        
+          collection {
+            id
+          }          
+        }
+      }`
+    );
+  }
+
   const data = await response.json();
   return data;
 }
@@ -92,6 +108,20 @@ export async function action({ request }) {
 export default function Collections() {
   const { data } = useLoaderData();
   const submit = useSubmit();
+
+  /* model */
+
+  const [active, setActive] = useState(false);
+
+  const handleChange = () => {
+    if (active) {
+      setActive(false);
+    } else {
+      setActive(true);
+    }
+  };
+
+  const activator = <Button onClick={handleChange}>Edit</Button>;
 
   return (
     <Page>
@@ -115,7 +145,18 @@ export default function Collections() {
                     <td>{cl.node.title}</td>
                     <td>{cl.node.description}</td>
                     <td>
-                      <Button>Edit</Button>
+                      {activator}
+                      {active && (
+                        <PopupModel
+                          active={active}
+                          handleChange={handleChange}
+                          data={{
+                            id: cl.node.id,
+                            title: cl.node.title,
+                            description: cl.node.description,
+                          }}
+                        />
+                      )}
                     </td>
                     <td>
                       <Button

@@ -2,7 +2,7 @@
 
 name = "assignment1-basic-app"
 client_id = "fbcb120784c941cbc1f4ccc035cbce65"
-application_url = "https://ken-feels-trailer-claimed.trycloudflare.com"
+application_url = "https://encoding-reveal-grass-lafayette.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -11,10 +11,10 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://ken-feels-trailer-claimed.trycloudflare.com/auth/callback",
-  "https://ken-feels-trailer-claimed.trycloudflare.com/auth/shopify/callback",
-  "https://ken-feels-trailer-claimed.trycloudflare.com/api/auth/callback",
-  "https://ken-feels-trailer-claimed.trycloudflare.com/.shopify/graphiql/auth/callback"
+  "https://encoding-reveal-grass-lafayette.trycloudflare.com/auth/callback",
+  "https://encoding-reveal-grass-lafayette.trycloudflare.com/auth/shopify/callback",
+  "https://encoding-reveal-grass-lafayette.trycloudflare.com/api/auth/callback",
+  "https://encoding-reveal-grass-lafayette.trycloudflare.com/.shopify/graphiql/auth/callback"
 ]
 
 [webhooks]
