@@ -16,7 +16,7 @@ import {
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useSubmit } from "@remix-run/react";
 
 export const loader = async ({ request }) => {
   const { admin } = await authenticate.admin(request);
@@ -43,33 +43,62 @@ export const loader = async ({ request }) => {
 };
 
 export async function action({ request }) {
+  let response;
   const { admin } = await authenticate.admin(request);
   const formData = await request.formData();
   const values = Object.fromEntries(formData);
 
-  const response = await admin.graphql(
-    `#graphql
-    mutation CollectionCreate($input: CollectionInput!) {
-      collectionCreate(input: $input) {
-
-        collection {
-          id
-          title
-          descriptionHtml
-
-         
+  if (request.method === "POST") {
+    response = await admin.graphql(
+      `#graphql
+      mutation CollectionCreate($input: CollectionInput!) {
+        collectionCreate(input: $input) {
+  
+          collection {
+            id
+            title
+            descriptionHtml
+  
+           
+          }
         }
-      }
-    }`,
-    {
-      variables: {
-        input: {
-          title: values.title,
-          descriptionHtml: values.description,
+      }`,
+      {
+        variables: {
+          input: {
+            title: values.title,
+            descriptionHtml: values.description,
+          },
         },
-      },
-    }
-  );
+      }
+    );
+  }
+
+  if (request.method === "DELETE") {
+    response = await admin.graphql(
+      `#graphql
+      mutation collectionDelete($input: CollectionDeleteInput!) {
+        collectionDelete(input: $input) {
+          deletedCollectionId
+          shop {
+            id
+            name
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }`,
+      {
+        variables: {
+          input: {
+            id: values.collectionId,
+          },
+        },
+      }
+    );
+  }
 
   const data = await response.json();
   return data;
@@ -77,6 +106,7 @@ export async function action({ request }) {
 
 export default function Collections() {
   const { data } = useLoaderData();
+  const submit = useSubmit();
 
   return (
     <Page>
@@ -91,7 +121,8 @@ export default function Collections() {
                 <tr>
                   <th>Title</th>
                   <th>Description</th>
-                  <th>Action</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
                 </tr>
                 {data.collections.edges.map((cl) => (
                   <tr key={cl.node.id}>
@@ -99,6 +130,24 @@ export default function Collections() {
                     <td>{cl.node.description}</td>
                     <td>
                       <Button>Edit</Button>
+                    </td>
+                    <td>
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          const formData = new FormData();
+                          formData.set("collectionId", cl.node.id);
+                          submit(formData, {
+                            method: "delete",
+                            encType: "application/x-www-form-urlencoded",
+                            preventScrollReset: false,
+                            replace: false,
+                            relative: "route",
+                          });
+                        }}
+                      >
+                        Delete
+                      </Button>
                     </td>
                   </tr>
                 ))}
